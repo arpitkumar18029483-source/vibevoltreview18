@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAIL-URJA | Visitor Reviews</title>
+<style>
+  :root {
+    --navy: #10233f;
+    --blue: #2864e8;
+    --cyan: #37d6d0;
+    --bg: #f3f7ff;
+    --card: #ffffff;
+    --text: #15233b;
+    --muted: #65738b;
+    --line: #e4eaf4;
+    --gold: #ffb82e;
+    --red: #ff6b6b;
+    --green: #18a875;
+    --shadow: 0 18px 55px rgba(22, 50, 94, .12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: radial-gradient(circle at top right, #dffbfa 0, transparent 30%), linear-gradient(135deg, #f3f7ff, #eef4ff);
+    color: var(--text);
+  }
+  .topbar {
+    background: linear-gradient(115deg, #10233f, #174e83 65%, #168d9a);
+    color: white; padding: 24px 18px 48px; position: relative; overflow: hidden;
+  }
+  .topbar:after {
+    content: ""; position: absolute; width: 260px; height: 260px; border: 1px solid #ffffff26;
+    border-radius: 50%; right: -60px; top: -140px; box-shadow: 0 0 0 30px #ffffff0a, 0 0 0 65px #ffffff08;
+  }
+  .header-inner, main { width: min(960px, calc(100% - 30px)); margin: auto; }
+  .brand { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; }
+  .logo {
+    letter-spacing: -.5px; border: 1px solid #ffffff70;
+    width: 48px; height: 48px; border-radius: 15px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--cyan), #75f0b7); color: #10233f; font-weight: 900; font-size: 19px;
+    box-shadow: 0 8px 22px #0002;
+  }
+  .brand h1 { font-size: 19px; margin: 0; letter-spacing: .8px; }
+  .brand p { margin: 4px 0 0; color: #d5e7ff; font-size: 12px; }
+  .hero { position: relative; z-index: 1; margin-top: 29px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 2px; font-weight: 800; font-size: 11px; color: #8cf5e7; }
+  .hero h2 { text-wrap: balance; font-size: clamp(28px, 5vw, 42px); line-height: 1.08; margin: 9px 0 10px; max-width: 650px; }
+  .hero p { margin: 0; max-width: 610px; color: #dceaff; line-height: 1.6; }
+  main { margin-top: -26px; position: relative; z-index: 2; padding-bottom: 36px; }
+  .tabs { display: flex; gap: 8px; background: #e4ebf7; padding: 6px; border-radius: 16px; width: fit-content; margin-bottom: 16px; box-shadow: 0 6px 20px #10233f0b; }
+  .tab { border: 0; padding: 12px 18px; border-radius: 11px; font-weight: 800; color: #52627a; cursor: pointer; background: transparent; font-size: 14px; }
+  .tab.active { background: white; color: var(--blue); box-shadow: 0 4px 12px #10233f12; }
+  .panel { background: linear-gradient(180deg, #ffffff, #fcfdff); border: 1px solid #ffffff; border-radius: 24px; padding: clamp(20px, 4vw, 34px); box-shadow: var(--shadow); }
+  .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 24px; }
+  .panel h3 { margin: 0; font-size: 24px; }
+  .sub { color: var(--muted); margin: 7px 0 0; font-size: 14px; line-height: 1.5; }
+  .pill { border-radius: 999px; background: #e8fbf6; color: #128360; padding: 8px 12px; font-size: 12px; font-weight: 800; white-space: nowrap; }
+  label { display: block; font-size: 13px; font-weight: 800; margin: 0 0 8px; color: #33435d; }
+  input, textarea { width: 100%; border: 1.5px solid var(--line); border-radius: 13px; padding: 14px 15px; font: inherit; color: var(--text); outline: none; background: #fbfcff; transition: .2s; }
+  input:focus, textarea:focus { border-color: #6e9cff; box-shadow: 0 0 0 4px #2864e815; background: white; }
+  textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+  .field { margin-bottom: 21px; }
+  .rating-wrap { background: #f7f9fe; border: 1px solid #e8eef8; border-radius: 18px; padding: 18px; }
+  .rating-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .rating-top label { margin: 0; }
+  .rating-value { color: #b87a00; background: #fff3d4; border-radius: 10px; padding: 7px 10px; font-weight: 900; font-size: 13px; }
+  .stars { display: flex; flex-wrap: wrap; gap: 5px; margin: 14px 0 12px; }
+  .star { border: 0; background: transparent; padding: 0 2px; cursor: pointer; font-size: clamp(25px, 5vw, 36px); line-height: 1.2; color: #d5dce8; filter: grayscale(1); transition: transform .12s; }
+  .star.active { color: var(--gold); filter: none; text-shadow: 0 2px 0 #e99a0a20; }
+  .star:hover { transform: translateY(-3px) scale(1.05); }
+  .rating-help { margin: 0; color: var(--muted); font-size: 12px; }
+  .mood-label { margin-bottom: 10px; }
+  .moods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .mood { border: 1.5px solid var(--line); background: #fff; border-radius: 15px; padding: 13px 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; font-weight: 800; color: #53627a; }
+  .mood .emoji { font-size: 27px; }
+  .mood small { font-size: 11px; font-weight: 600; color: #8490a3; }
+  .mood.selected { border-color: #75a0ff; background: #f0f5ff; color: var(--blue); box-shadow: 0 0 0 3px #2864e810; }
+  .mood[data-mood="Bad"].selected { border-color: #ffaaaa; background: #fff5f5; color: #d14b4b; }
+  .mood[data-mood="Good"].selected { border-color: #8de0c1; background: #effcf6; color: #128360; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 23px; }
+  .btn { border: 0; border-radius: 13px; padding: 14px 19px; font: inherit; font-weight: 900; cursor: pointer; transition: .15s; }
+  .btn-primary { color: white; background: linear-gradient(110deg, var(--blue), #347fe9); box-shadow: 0 9px 20px #2864e82c; flex: 1; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 12px 24px #2864e83d; }
+  .btn-secondary { color: #42536e; background: #edf2fa; }
+  .btn-danger { color: #b93d3d; background: #fff0f0; }
+  .notice { display: none; margin-top: 15px; border-radius: 12px; padding: 12px 14px; font-size: 13px; font-weight: 700; }
+  .notice.show { display: block; }
+  .notice.ok { color: #10734f; background: #eafaf3; }
+  .notice.err { color: #b33333; background: #fff0f0; }
+  .privacy { color: #7b879a; font-size: 11px; line-height: 1.5; margin: 16px 0 0; }
+  .history-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat { border-radius: 15px; padding: 16px; background: #f5f8ff; border: 1px solid #e9eff9; }
+  .stat span { color: var(--muted); display: block; font-size: 12px; font-weight: 700; }
+  .stat strong { display: block; margin-top: 6px; font-size: 25px; }
+  .reviews { display: grid; gap: 12px; }
+  .review { border: 1px solid var(--line); border-radius: 16px; padding: 17px; background: #fff; }
+  .review-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+  .review-name { font-weight: 900; font-size: 16px; overflow-wrap: anywhere; }
+  .review-date { color: #8994a6; font-size: 11px; margin-top: 4px; }
+  .review-score { color: #a86d00; background: #fff5da; border-radius: 10px; padding: 7px 9px; font-weight: 900; white-space: nowrap; font-size: 13px; }
+  .review-mood { display: inline-flex; align-items: center; gap: 6px; margin: 12px 0 7px; background: #f4f7fc; padding: 6px 9px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+  .review-comment { margin: 5px 0 0; color: #4d5c73; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .empty { text-align: center; padding: 38px 15px; border: 1px dashed #cdd8e9; border-radius: 17px; background: #fafcff; }
+  .empty .big { font-size: 40px; }
+  .empty h4 { margin: 8px 0 6px; font-size: 17px; }
+  .empty p { margin: 0; color: var(--muted); font-size: 13px; }
+  .hidden { display: none !important; }
+  footer { text-align: center; color: #8290a5; font-size: 11px; padding: 0 15px 24px; }
+  @media (max-width: 560px) {
+    .panel-head { flex-direction: column; }
+    .tabs { width: 100%; }
+    .tab { flex: 1; padding: 12px 8px; }
+    .history-summary { gap: 7px; }
+    .stat { padding: 12px 10px; }
+    .stat strong { font-size: 21px; }
+    .moods { gap: 6px; }
+    .mood { padding: 11px 4px; }
+    .actions .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="logo">RU</div>
+      <div><h1>RAIL-URJA</h1><p>Smart Railway Vibration Energy Harvester</p></div>
+    </div>
+    <div class="hero">
+      <div class="eyebrow">RAIL-URJA • PROJECT FEEDBACK</div>
+      <h2>Your feedback can help power a brighter future.</h2>
+      <p>Tell us what you think about our project. Your rating and suggestions help us learn, improve, and innovate.</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <nav class="tabs" aria-label="Feedback sections">
+    <button class="tab active" id="reviewTab" type="button">⭐ Give Review</button>
+    <button class="tab" id="historyTab" type="button">📜 Review History <span id="tabCount">(0)</span></button>
+  </nav>
+
+  <section class="panel" id="reviewPanel">
+    <div class="panel-head">
+      <div><h3>Share your experience</h3><p class="sub">A quick review from you means a lot to our young innovators.</p></div>
+      <span class="pill">RAIL-URJA • Exhibition</span>
+    </div>
+
+    <form id="reviewForm">
+      <div class="field">
+        <label for="visitorName">Your good name</label>
+        <input id="visitorName" name="visitorName" type="text" placeholder="Enter your name" maxlength="60" required autocomplete="name">
+      </div>
+
+      <div class="field rating-wrap">
+        <div class="rating-top">
+          <label>Give us a rating out of 10</label>
+          <span class="rating-value" id="ratingValue">0 / 10 stars</span>
+        </div>
+        <div class="stars" id="stars" role="group" aria-label="Choose a rating out of 10">
+          <button class="star" type="button" data-rating="1" aria-label="1 star">★</button>
+          <button class="star" type="button" data-rating="2" aria-label="2 stars">★</button>
+          <button class="star" type="button" data-rating="3" aria-label="3 stars">★</button>
+          <button class="star" type="button" data-rating="4" aria-label="4 stars">★</button>
+          <button class="star" type="button" data-rating="5" aria-label="5 stars">★</button>
+          <button class="star" type="button" data-rating="6" aria-label="6 stars">★</button>
+          <button class="star" type="button" data-rating="7" aria-label="7 stars">★</button>
+          <button class="star" type="button" data-rating="8" aria-label="8 stars">★</button>
+          <button class="star" type="button" data-rating="9" aria-label="9 stars">★</button>
+          <button class="star" type="button" data-rating="10" aria-label="10 stars">★</button>
+        </div>
+        <p class="rating-help">Tap a star to select your score. 1 = needs improvement • 10 = excellent</p>
+      </div>
+
+      <div class="field">
+        <label class="mood-label">How was our project?</label>
+        <div class="moods" role="group" aria-label="Choose your feedback">
+          <button class="mood" type="button" data-mood="Bad"><span class="emoji">😕</span><span>Bad</span><small>Needs work</small></button>
+          <button class="mood" type="button" data-mood="Normal"><span class="emoji">😐</span><span>Normal</span><small>It's okay</small></button>
+          <button class="mood" type="button" data-mood="Good"><span class="emoji">🤩</span><span>Good</span><small>Loved it</small></button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="comment">Describe our project or share a suggestion</label>
+        <textarea id="comment" name="comment" placeholder="What did you like about RAIL-URJA? What can we improve?" maxlength="1000" required></textarea>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" type="submit">Submit Review ✓</button>
+        <button class="btn btn-secondary" type="reset" id="resetBtn">Clear Form</button>
+      </div>
+      <div class="notice" id="formNotice" role="status"></div>
+      <p class="privacy">Privacy note: Reviews are saved in this browser on this device. They will not automatically appear on another phone or laptop. Keep this browser data safe if you need the history later.</p>
+    </form>
+  </section>
+
+  <section class="panel hidden" id="historyPanel">
+    <div class="panel-head">
+      <div><h3>Review History</h3><p class="sub">All feedback saved on this device appears here.</p></div>
+      <button class="btn btn-secondary" id="exportBtn" type="button">⬇ Export CSV</button>
+    </div>
+    <div class="history-summary">
+      <div class="stat"><span>Total reviews</span><strong id="totalReviews">0</strong></div>
+      <div class="stat"><span>Average rating</span><strong id="averageRating">—</strong></div>
+      <div class="stat"><span>Good feedback</span><strong id="goodCount">0</strong></div>
+    </div>
+    <div class="reviews" id="reviewsList"></div>
+    <div class="actions"><button class="btn btn-danger" id="clearHistoryBtn" type="button">Clear All History</button></div>
+    <div class="notice" id="historyNotice" role="status"></div>
+  </section>
+</main>
+<footer>Made for the RAIL-URJA science exhibition • Thank you for sharing your feedback!</footer>
+
+<script>
+(() => {
+  const STORAGE_KEY = 'rail_urja_reviews_v1';
+  let rating = 0;
+  let mood = '';
+
+  const $ = (id) => document.getElementById(id);
+  const reviewTab = $('reviewTab');
+  const historyTab = $('historyTab');
+  const reviewPanel = $('reviewPanel');
+  const historyPanel = $('historyPanel');
+  const form = $('reviewForm');
+  const stars = [...document.querySelectorAll('.star')];
+  const moodButtons = [...document.querySelectorAll('.mood')];
+
+  function getReviews() {
+    try {
+      const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      return Array.isArray(value) ? value : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveReviews(reviews) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(reviews));
+  }
+
+  function setRating(value) {
+    rating = value;
+    stars.forEach((star) => {
+      const selected = Number(star.dataset.rating) <= rating;
+      star.classList.toggle('active', selected);
+      star.setAttribute('aria-pressed', String(Number(star.dataset.rating) === rating));
+    });
+    $('ratingValue').textContent = `${rating} / 10 stars`;
+  }
+
+  function setMood(value) {
+    mood = value;
+    moodButtons.forEach((button) => {
+      button.classList.toggle('selected', button.dataset.mood === mood);
+      button.setAttribute('aria-pressed', String(button.dataset.mood === mood));
+    });
+  }
+
+  function showNotice(element, message, type) {
+    element.textContent = message;
+    element.className = `notice show ${type}`;
+  }
+
+  function switchTab(which) {
+    const showHistory = which === 'history';
+    reviewPanel.classList.toggle('hidden', showHistory);
+    historyPanel.classList.toggle('hidden', !showHistory);
+    reviewTab.classList.toggle('active', !showHistory);
+    historyTab.classList.toggle('active', showHistory);
+    if (showHistory) renderHistory();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[char]));
+  }
+
+  function moodEmoji(value) {
+    return value === 'Good' ? '🤩' : value === 'Normal' ? '😐' : '😕';
+  }
+
+  function renderHistory() {
+    const reviews = getReviews().sort((a, b) => b.createdAt - a.createdAt);
+    $('tabCount').textContent = `(${reviews.length})`;
+    $('totalReviews').textContent = reviews.length;
+    $('averageRating').textContent = reviews.length
+      ? (reviews.reduce((sum, item) => sum + Number(item.rating || 0), 0) / reviews.length).toFixed(1) + '/10'
+      : '—';
+    $('goodCount').textContent = reviews.filter((item) => item.mood === 'Good').length;
+
+    const list = $('reviewsList');
+    if (!reviews.length) {
+      list.innerHTML = '<div class="empty"><div class="big">📝</div><h4>No reviews yet</h4><p>Be the first to share feedback about RAIL-URJA.</p></div>';
+      return;
+    }
+    list.innerHTML = reviews.map((item) => {
+      const date = new Date(item.createdAt);
+      const dateText = Number.isNaN(date.getTime()) ? '' : date.toLocaleString();
+      return `<article class="review">
+        <div class="review-top">
+          <div><div class="review-name">${escapeHTML(item.name)}</div><div class="review-date">${escapeHTML(dateText)}</div></div>
+          <div class="review-score">★ ${Number(item.rating)}/10</div>
+        </div>
+        <div class="review-mood">${moodEmoji(item.mood)} ${escapeHTML(item.mood)}</div>
+        <p class="review-comment">${escapeHTML(item.comment)}</p>
+      </article>`;
+    }).join('');
+  }
+
+  stars.forEach((star) => star.addEventListener('click', () => setRating(Number(star.dataset.rating))));
+  moodButtons.forEach((button) => button.addEventListener('click', () => setMood(button.dataset.mood)));
+  reviewTab.addEventListener('click', () => switchTab('review'));
+  historyTab.addEventListener('click', () => switchTab('history'));
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const name = $('visitorName').value.trim();
+    const comment = $('comment').value.trim();
+    if (!name || !comment) {
+      showNotice($('formNotice'), 'Please enter your name and a short review.', 'err');
+      return;
+    }
+    if (!rating) {
+      showNotice($('formNotice'), 'Please select a rating from 1 to 10 stars.', 'err');
+      return;
+    }
+    if (!mood) {
+      showNotice($('formNotice'), 'Please choose Bad, Normal, or Good.', 'err');
+      return;
+    }
+    const reviews = getReviews();
+    reviews.push({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, name, rating, mood, comment, createdAt: Date.now() });
+    try {
+      saveReviews(reviews);
+      form.reset();
+      setRating(0);
+      setMood('');
+      showNotice($('formNotice'), 'Thank you! Your review has been saved successfully. 🎉', 'ok');
+      $('tabCount').textContent = `(${reviews.length})`;
+    } catch (error) {
+      showNotice($('formNotice'), 'Could not save this review. Check your browser storage settings.', 'err');
+    }
+  });
+
+  $('resetBtn').addEventListener('click', () => {
+    setRating(0);
+    setMood('');
+    $('formNotice').className = 'notice';
+  });
+
+  $('clearHistoryBtn').addEventListener('click', () => {
+    const reviews = getReviews();
+    if (!reviews.length) {
+      showNotice($('historyNotice'), 'There is no history to clear.', 'err');
+      return;
+    }
+    if (confirm('Are you sure you want to permanently clear all reviews saved in this browser?')) {
+      saveReviews([]);
+      renderHistory();
+      showNotice($('historyNotice'), 'All review history has been cleared.', 'ok');
+    }
+  });
+
+  $('exportBtn').addEventListener('click', () => {
+    const reviews = getReviews();
+    if (!reviews.length) {
+      showNotice($('historyNotice'), 'There are no reviews to export yet.', 'err');
+      return;
+    }
+    const rows = [['Name', 'Rating out of 10', 'Feedback', 'Review', 'Date']];
+    reviews.forEach((item) => rows.push([
+      item.name, item.rating, item.mood, item.comment, new Date(item.createdAt).toLocaleString()
+    ]));
+    const csv = rows.map((row) => row.map((cell) => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'rail-urja-review-history.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showNotice($('historyNotice'), 'Your review history CSV has been downloaded.', 'ok');
+  });
+
+  setRating(0);
+  setMood('');
+  renderHistory();
+})();
+</script>
+</body>
+</html>
